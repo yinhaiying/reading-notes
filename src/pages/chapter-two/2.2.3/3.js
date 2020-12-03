@@ -13,7 +13,9 @@ const removeEle = (arr, n, x) => {
             k += 1;
         }
     }
+    console.log("修改length前的arr:", arr)
     arr.length = k;
+    console.log("修改length后的arr:", arr)
     return arr;
 }
 
