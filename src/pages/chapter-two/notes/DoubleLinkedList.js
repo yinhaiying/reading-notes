@@ -81,7 +81,7 @@ class DoubleLinkedList {
         if (this.head === null) {
             return -1;
         }
-        if (index < this.length) {
+        if (index > this.length) {
             return false;
         }
         let i = 1;
