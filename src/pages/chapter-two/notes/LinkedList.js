@@ -65,38 +65,31 @@ class LinkedList {
         if (this.head === null) {
             return -1;
         }
+        if(index < this.length){
+            return false;
+        }
         let i = 1;
         let current = this.head;
-        while (current.next) {
-            if (i === index) {
-                return current
-            }
+        while (i < index) {
             i += 1;
             current = current.next;
         }
-        if (i === index) {
-            return current;
-        } else {
-            return -1;
-        }
+        return current;
     }
     // 按照值进行查找
-    getElemByValue(value){
-      if(this.head === null){
-          return -1;
-      }
-      let current = this.head;
-      while(current.next){
-          if(current.value === value){
-              return current;
-          }
-          current = current.next;
-      }
-      if(current.value === value){
-          return current;
-      }else{
-          return -1;
-      }
+    getElemByValue(value) {
+        if (this.head === null) {
+            return -1;
+        }
+        let current = this.head;
+        while (current.value !== value) {
+            if (current.next) {
+                current = current.next;
+            } else {
+                return -1;
+            }
+        }
+        return current;
     }
     // 插入结点进行操作
     insert(index,element){
