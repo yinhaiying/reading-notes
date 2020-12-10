@@ -117,6 +117,42 @@ class LinkedList {
     size(){
         return this.length;
     }
+    // 找到元素的前一个元素
+    findPrevious(element){
+      if (this.head === null || this.head.value === element) {
+          return false;
+      } 
+      let current = this.head;
+      while(current.next){
+          if(current.next.value === element){
+              return current;
+          }else{
+              current = current.next;
+          }
+      }
+      return -1;
+    }
+    // 删除指定的元素
+    removeEle(element){
+        let current = null;
+        if(this.head === null){
+            return false;
+        }else if(this.head.value === element){
+            current = this.head;
+            this.head = this.head.next;
+            this.length -= 1;
+            return current;
+        }
+        const prev = this.findPrevious(element);
+        if(prev && prev !== -1){
+            current = prev.next;
+            prev.next = prev.next.next;
+            this.length -= 1;
+            return current;
+        }else{
+            return -1;
+        }
+    }
 
     toString() {
         let str = "";
@@ -136,10 +172,10 @@ class LinkedList {
 
 }
 
-let linkedList = new LinkedList();
+// let linkedList = new LinkedList();
 
-let arr = [1, 3, 5, 7, 9, 11,13,15];
-console.log("尾插法生成一个链表", linkedList.createByTailInsert(arr), "链表长度：", linkedList.size());
+// let arr = [1, 3, 5, 7, 9, 11,13,15];
+// console.log("尾插法生成一个链表", linkedList.createByTailInsert(arr), "链表长度：", linkedList.size());
 // console.log(linkedList.append(11));
 // console.log(linkedList.headInsert(3));
 // console.log(linkedList.headInsert(4));
@@ -149,5 +185,7 @@ console.log("尾插法生成一个链表", linkedList.createByTailInsert(arr), "
 // console.log(linkedList.getElemByNum(3))
 // let result = linkedList.getElemByValue(3)
 // console.log(result)
-console.log("第4个位置插入111",linkedList.insert(4,1111),"链表长度：",linkedList.size())
-console.log("删除第二个位置的元素", linkedList.remove(5), "链表长度：", linkedList.size())
+// console.log("第4个位置插入111",linkedList.insert(4,1111),"链表长度：",linkedList.size())
+// console.log("删除第二个位置的元素", linkedList.remove(5), "链表长度：", linkedList.size())
+
+module.exports = LinkedList
