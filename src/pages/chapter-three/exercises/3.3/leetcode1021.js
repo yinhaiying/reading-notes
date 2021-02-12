@@ -14,14 +14,13 @@ var removeOuterParentheses = function (S) {
   var myStack = new MyStack();
   var str = "";
   var item;
-  var peak;
   var firstPosition = 0;
   for (var i = 0; i < S.length; i++) {
     item = S[i];
     if (item === "(") {
       myStack.push(item);
     } else {
-      peak = myStack.pop();
+      myStack.pop();
       if (myStack.isEmpty()) {
         //说明匹配完毕
         var result = S.slice(firstPosition + 1, i)
