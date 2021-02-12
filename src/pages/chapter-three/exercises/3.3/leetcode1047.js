@@ -20,7 +20,6 @@ var removeDuplicates = function (S) {
     }
   };
   var str = "";
-  console.log(myStack.toString())
   while (myStack.getSize() > 0) {
     str = myStack.pop() + str;
   }

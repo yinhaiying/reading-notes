@@ -44,15 +44,14 @@ var calPoints = function (ops) {
         break;
       default:
         arr.push(item);
-        console.log(arr)
         break;
     }
   }
   var sum = 0;
   for (var i = 0; i < arr.length; i++) {
     sum += Number(arr[i]);
-  }
-  console.log(sum)
+  };
+  return sum;
 };
 
 console.log(calPoints(ops))
