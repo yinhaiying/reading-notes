@@ -1,5 +1,4 @@
 
-
 class Stack {
   constructor() {
     this.stack = new Array();
@@ -9,7 +8,7 @@ class Stack {
     this.stack.push(element);
     this.size += 1;
   }
-  remove() {
+  pop() {
     if (!this.isEmpty()) {
       this.size -= 1;
       return this.stack.pop();
@@ -20,6 +19,9 @@ class Stack {
   }
   peak() {
     return this.stack[this.size - 1];
+  }
+  getSize() {
+    return this.size;
   }
   toString() {
     let str = 'Stack:[';
@@ -39,8 +41,10 @@ const stack = new Stack();
 stack.push(1);
 stack.push(2);
 stack.push(3);
-stack.remove(3);
+stack.pop(3);
 stack.push(4);
 stack.push(3);
-console.log(stack.peak());
-console.log(stack.toString())
+// console.log(stack.peak());
+// console.log(stack.toString())
+
+module.exports = Stack;
