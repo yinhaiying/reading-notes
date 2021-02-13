@@ -53,6 +53,21 @@ class BinarySearchTree {
       }
     }
   }
+  preOrderTraversal(handler) {
+
+    this.preOrderTraversalNode(this.root, handler);
+  }
+  preOrderTraversalNode(node, handler) {
+    if (node !== null) {
+      handler(node.key); // 输出根节点的key
+      if (node.left) {
+        this.preOrderTraversalNode(node.left, handler);
+      }
+      if (node.right) {
+        this.preOrderTraversalNode(node.right, handler);
+      }
+    }
+  }
 }
 
 
@@ -71,3 +86,11 @@ binarySearchTree.insert(14);
 binarySearchTree.insert(20);
 binarySearchTree.insert(18);
 binarySearchTree.insert(25);
+binarySearchTree.insert(6);
+
+var result = "";
+
+binarySearchTree.preOrderTraversal(function (key) {
+  result += key + "->"
+});
+console.log(result)
