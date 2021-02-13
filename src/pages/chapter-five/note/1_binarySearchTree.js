@@ -95,6 +95,21 @@ class BinarySearchTree {
       handler(node.key); // 输出根节点的key
     }
   }
+  // 二叉搜索树的搜索
+  min() {
+    let node = this.root;
+    while (node.left) {
+      node = node.left;
+    }
+    return node.key;
+  }
+  max() {
+    let node = this.root;
+    while (node.right) {
+      node = node.right;
+    }
+    return node.key;
+  }
 }
 
 
@@ -131,3 +146,6 @@ binarySearchTree.postOrderTraversal(function (key) {
   result += key + "->"
 });
 console.log("result:后序遍历：", result);
+
+console.log("result:最小值：", binarySearchTree.min());
+console.log("result:最小值：", binarySearchTree.max());
