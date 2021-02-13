@@ -47,3 +47,58 @@ var lowestCommonAncestor = function (root, p, q) {
     return root;
   }
 };
+
+// 但是上面的这种方法，太麻烦了，需要每次去找p是否在左侧，q是否在左侧。事实上我们可以可以同时
+// 查找p和q是否在左侧pqInLeft，我们只需要返回查找到的值，如果有值，说明至少有一个在左侧。如果为null，
+// 说明都在右侧，因此，只需要去右侧进行查找。
+
+
+
+var lowestCommonAncestor = function (root, p, q) {
+  var find = function (root, p, q) {
+    if (root === null || root === p || root === q) { return root };
+    var left = find(root.left, p, q);
+    var right = find(root.right, p, q);
+    return left ? left : right;
+  }
+  if (root === null || root === p || root === q) {
+    return root;
+  }
+  // 先找出p,q分别在哪个位置
+  var pqInLeft = find(root.left, p, q);
+  var pqInRight = find(root.right, p, q);
+  if (pqInLeft === null) {
+    return lowestCommonAncestor(root.right, p, q)
+  } else if (pqInRight === null) {
+    return lowestCommonAncestor(root.left, p, q)
+  } else {
+    return root;
+  }
+};
+
+// 再进一步优化：我们可以发现，存在非常多的重复的代码，find这个过程实际上就是lowestCommonAncestor
+// 函数的功能
+
+
+var lowestCommonAncestor = function (root, p, q) {
+  // var find = function (root, p, q) {
+  //   if (root === null || root === p || root === q) { return root };
+  //   var left = find(root.left, p, q);
+  //   var right = find(root.right, p, q);
+  //   return left ? left : right;
+  // }
+  if (root === null || root === p || root === q) {
+    return root;
+  }
+  // 先找出p,q分别在哪个位置
+  // pqInLeft返回的就是先遍历到的左侧等于p或者q的值。
+  var pqInLeft = lowestCommonAncestor(root.left, p, q);
+  var pqInRight = lowestCommonAncestor(root.right, p, q);
+  if (pqInLeft === null) {
+    return pgInRight;
+  } else if (pqInRight === null) {
+    return pqInLeft;
+  } else {
+    return root;
+  }
+};
