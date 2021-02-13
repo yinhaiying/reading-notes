@@ -27,13 +27,10 @@ var makeGood = function (s) {
   var peak;
   arr.push(s[0])
   for (var i = 1; i < s.length; i++) {
-
     item = s.charCodeAt(i);
     if (arr.length === 0) {
       arr.push(s[i]);
     } else {
-      // console.log(arr);
-      // console.log(i);
       peak = arr[arr.length - 1].charCodeAt(0);
       if (item - peak === 32 || peak - item === 32) {
         arr.pop();
