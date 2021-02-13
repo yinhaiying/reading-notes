@@ -54,7 +54,6 @@ class BinarySearchTree {
     }
   }
   preOrderTraversal(handler) {
-
     this.preOrderTraversalNode(this.root, handler);
   }
   preOrderTraversalNode(node, handler) {
@@ -66,6 +65,34 @@ class BinarySearchTree {
       if (node.right) {
         this.preOrderTraversalNode(node.right, handler);
       }
+    }
+  }
+  midOrderTraversal(handler) {
+    this.midOrderTraversalNode(this.root, handler);
+  }
+  midOrderTraversalNode(node, handler) {
+    if (node !== null) {
+      if (node.left) {
+        this.midOrderTraversalNode(node.left, handler);
+      }
+      handler(node.key); // 输出根节点的key
+      if (node.right) {
+        this.midOrderTraversalNode(node.right, handler);
+      }
+    }
+  }
+  postOrderTraversal(handler) {
+    this.postOrderTraversalNode(this.root, handler);
+  }
+  postOrderTraversalNode(node, handler) {
+    if (node !== null) {
+      if (node.left) {
+        this.postOrderTraversalNode(node.left, handler);
+      }
+      if (node.right) {
+        this.postOrderTraversalNode(node.right, handler);
+      }
+      handler(node.key); // 输出根节点的key
     }
   }
 }
@@ -93,4 +120,14 @@ var result = "";
 binarySearchTree.preOrderTraversal(function (key) {
   result += key + "->"
 });
-console.log(result)
+console.log("result:先序遍历：", result);
+result = "";
+binarySearchTree.midOrderTraversal(function (key) {
+  result += key + "->"
+});
+console.log("result:中序遍历：", result);
+result = "";
+binarySearchTree.postOrderTraversal(function (key) {
+  result += key + "->"
+});
+console.log("result:后序遍历：", result);
