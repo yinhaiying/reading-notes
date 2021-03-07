@@ -139,10 +139,93 @@ function mergeSort(arr, start, end) {
 }
 ```
 
+## 快速排序
+
+快速排序和合并排序的思想是一致的，都是分治思想，将数据规模拆分更小的规模，然后进行合并。不同的是合并排序在中间位置不断拆分，直到数组长度为 1；而快速排序是找到一个基准点，拆分成比它小的和比它大的。
+
+快速排序最暴力的写法，左右各一个数组用来存放比它小和比它大的元素。
+
+```js
+function quickSort(arr) {
+  if (arr.length <= 1) {
+    return arr;
+  }
+  var mid = arr[0];
+  var left = [];
+  var right = [];
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] <= mid) {
+      left.push(arr[i]);
+    } else {
+      right.push(arr[i]);
+    }
+  }
+  return [].concat(quickSort(left), mid, quickSort(right));
+}
+```
+
+这种暴力写法每次都需要递归时都需要创建两个数组，空间复杂度较高。
+因此，能不能不创建额外的空间来实现，这种小的放左边，大的放右边？通常来说不使用额外的空间，
+那么唯一的方法就是交换。
+
+### 快速排序交换的过程
+
+快速排序的核心就是实现左右两边的交换
+
+1. 左边的如果小于基准值，就不需要动
+2. 左边的如果大于基准值，就和右边的第 j 位(j 是最后一个标志位)进行交换,交换后这个大于的值就在右边了。
+3. 交换到左边的值继续进行比较..直到 i 和 j 相遇为止。
+4. 最后将基准点位置和大于记住点的第一个值进行交换即可。
+
+```js
+function partition(arr, start, end) {
+  let pivot = arr[end - 1];
+  let i = start;
+  let j = end - 1; // j是大于pivot的起始位置
+  while (i < j) {
+    if (arr[i] > pivot) {
+      j--;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    } else {
+      i++;
+    }
+  }
+  [arr[end - 1], arr[j]] = [arr[j], arr[end - 1]]; //将中心点进行交换
+  return j;
+}
+```
+
+通过上面的函数，我们可以得到一个基准点，然后再将这个基准点的左边和右边进行拆分即可。
+我们使用上面的函数进行测试：
+
+```js
+var arr = [10, 50, 30, 90, 40, 80, 70];
+var arr2 = [10, 50, 30, 90, 40, 80, 70];
+let p = partition(arr, 0, 7);
+let p2 = partition(arr2, 1, 3);
+console.log(p, arr); // 4  [ 10, 30, 50, 40,70, 90, 80]
+console.log(p2, arr2); // 1  [10, 30, 50, 90, 40, 80, 70]
+```
+
+我们可以看到，我们可以将任何位置的数按照我们想要的小的放左边，大的放右边。这样的话我们就可以不断地在我们的数组位置中进行拆分，然后交换位置排序。由于直接操作的就是数组，因此不需要返回值。
+
+```js
+function quickSort(arr, low = 0, high = arr.length) {
+  // [low,high)
+  if (high - low <= 1) {
+    return;
+  }
+  const p = partition(arr, low, high); //
+  quickSort(arr, low, p);
+  quickSort(arr, p + 1, high);
+}
+```
+
 ## 排序时间复杂度分析
 
-| 排序     | 时间复杂度 | 空间复杂度 |
-| -------- | ---------- | ---------- |
-| 冒泡排序 | O(n^2)     | O(1)       |
-| 插入排序 | O(n^2)     | O(1)       |
-| 归并排序 | O(nlogn)   |            |
+| 排序     | 时间复杂度 | 空间复杂度                           |
+| -------- | ---------- | ------------------------------------ |
+| 冒泡排序 | O(n^2)     | O(1)                                 |
+| 插入排序 | O(n^2)     | O(1)                                 |
+| 归并排序 | O(nlogn)   | O(n)                                 |
+| 快速排序 | O(nlogn)   | O(1) // O(1)空间复杂度的都是基于交换 |
