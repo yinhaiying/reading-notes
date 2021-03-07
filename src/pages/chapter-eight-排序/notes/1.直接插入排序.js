@@ -39,16 +39,15 @@ function insert2(arr) {
 function insert3(arr) {
   for (let i = 1; i < arr.length; i++) {
     let temp = arr[i];  // 记录下这个元素
-    for (let j = i - 1; j >= 0; j--) {
+    let j;
+    for (j = i - 1; j >= 0; j--) {
       if (temp > arr[j]) {
-        arr[j + 1] = temp;
         break;
       } else {
         arr[j + 1] = arr[j];
-        arr[j] = temp;
       }
     }
-
+    arr[j + 1] = temp;
   }
   return arr;
 }
