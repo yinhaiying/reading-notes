@@ -1,5 +1,24 @@
 # 排序
 
+## 冒泡排序
+
+冒泡排序：是每次找出当前数组中最大的一个数，放到当前数组的最后面，这样的话找数组的长度次数，就能够将所有的数排列好了。
+
+```js
+function bubbleSort(arr) {
+  // i表示找的次数
+  for (let i = 0; i < arr.length - 1; i++) {
+    // j表示数组的每一个值
+    for (let j = 0; j < arr.length - 1 - i; j++) {
+      if (arr[j] > arr[j + 1]) {
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      }
+    }
+  }
+  return arr;
+}
+```
+
 ## 插入排序
 
 最简单的插入排序，使用了 O(n)的空间：
@@ -72,7 +91,7 @@ function insert3(arr) {
 平均时间复杂度为 O(n^2)
 是一个稳定的算法，在值相等的情况下，不会进行位置的变换，因此是稳定的。
 
-## 插入排序
+## 归并排序
 
 ### 实现两个有序数组的合并
 
@@ -221,6 +240,59 @@ function quickSort(arr, low = 0, high = arr.length) {
 }
 ```
 
+## 计数排序
+
+在前面学习的排序都是比较型的排序，它们的时间复杂度最低只能到 O(nlogn)；而计数排序是能够到 O(n)时间复杂度的排序算法。
+计数排序的特点：
+
+1. 非比较型排序
+2. 待排序集合键为整数
+3. 键的最大值不能超过 k
+
+```js
+function countSort(arr) {
+  let min = arr[0];
+  let max = arr[0]; // 计数排序必须知道最大值
+  let obj = {};
+  let result = [];
+  // 第一步：取值  n次操作
+  for (let i = 0; i < arr.length; i++) {
+    if (min > arr[i]) {
+      min = arr[i];
+    }
+    if (max < arr[i]) {
+      max = arr[i];
+    }
+    if (!obj[arr[i]]) {
+      obj[arr[i]] = 1;
+    } else {
+      obj[arr[i]] += 1;
+    }
+  }
+  // 第二步：填充数组  (max-min次操作，中间有些值不存在，有些值存在多个，但是无论如何加起来都只进行max-min次遍历)
+  for (let i = min; i <= max; i++) {
+    while (obj[i] >= 1) {
+      result.push(i);
+      obj[i] -= 1;
+    }
+  }
+  return result;
+}
+```
+
+我们看计数排序的实现：第一步遍历需要 O(n)次，第二步填充到结果数组中，需要 O(max-min)次，因此计数排序的时间复杂度为：O(n + max-min)
+
+### 计数排序的特点
+
+1. 空间换时间
+   用一个 hash table 计数，两次遍历解决问题
+   第一次遍历将数组复制到 hash table 中
+   第二次遍历，i 从 min 到 max（max 为最大值）
+   时间复杂度将为 O(n + max -min)。
+2. 输入的数据必须是有确定范围的整数
+3. 在某些情况下效率很低。
+   元素个数少，值跨度很大时。比如[1,999999999,5555]排序时就很慢
+
 ## 排序时间复杂度分析
 
 | 排序     | 时间复杂度 | 空间复杂度                           |
@@ -229,3 +301,4 @@ function quickSort(arr, low = 0, high = arr.length) {
 | 插入排序 | O(n^2)     | O(1)                                 |
 | 归并排序 | O(nlogn)   | O(n)                                 |
 | 快速排序 | O(nlogn)   | O(1) // O(1)空间复杂度的都是基于交换 |
+| 计数排序 | O(n)       | O(n)                                 |
