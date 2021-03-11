@@ -15,27 +15,31 @@
 
 
 var lengthOfLongestSubstring = function (s) {
-    let start = 0;
-    let end = 0;
-    let result = "";
-    for (let i = 0; i < s.length; i++) {
-        if (result.indexOf(s[i]) === -1) {
-            end += 1;
-            result = result.length < (end - start) ? s.slice(start, end) : result;
-        } else {
-            result = result.length < (end - start - 1) ? s.slice(start, end) : result;
-            start++;
-            end = i + 1;
-        }
-    }
-    console.log("result:",result)
-    return result.length;
+  let start = 0;
+  let end = 0;
+  let max = 0;
+  let obj = {};
+  while( end <= s.length-1){
+      if (!(s[end] in obj)) {
+          obj[s[end]] = end;
+          end += 1;
+      } else {
+          max = Math.max(max, end - start);
+          // start指针不能往后退，只能是当前一个和最新的中的最大值
+          start = Math.max(obj[s[end]] + 1,start);
+          obj[s[end]] = end;
+          end += 1;
+      }
+  }
+  return Math.max(max, end - start);
 };
 var s1 = "abcabcbb";
 var s2 = "bbbbbb";
 var s3 = "pwwkew";
-var s4 = "dvdf"
-// console.log(lengthOfLongestSubstring(s1));
-// console.log(lengthOfLongestSubstring(s2));
+var s4 = "dvdf";
+var s5 = "abba";
+console.log(lengthOfLongestSubstring(s1));
+console.log(lengthOfLongestSubstring(s2));
 console.log(lengthOfLongestSubstring(s3));
-// console.log(lengthOfLongestSubstring(s4));
+console.log(lengthOfLongestSubstring(s4));
+console.log(lengthOfLongestSubstring(s5));
