@@ -77,3 +77,42 @@ var lengthOfLongestSubstring = function (s) {
   return Math.max(max, end - start); // 返回最大值
 };
 ```
+
+### 应用四——连续最长数字子序
+双指针问题的关键是其中一个动，达到某个条件之后，需要另外一个动，因此关键是什么情况下达到条件，已经另外一个指针如何动。
+```js
+function longestNumberSubstring(str){
+  let start = 0;
+  let end = 0;
+  let result = "";
+  while(end < str.length){
+    if (!isNumber(str[end])) {
+      result = (end - start) > result.length ? str.slice(start,end):result;
+      start = end + 1;
+      end += 1;
+    }else{
+        // 前一个不是number
+        if(!isNumber(str[end-1])){
+          start = end;
+          end +=1;
+        }else{
+           if(str[end] - str[end -1] == 1){
+               end+=1;
+           }else{
+               result = (end - start) > result.length ? str.slice(start, end) : result;
+               start = end;
+               end += 1;
+           }
+        }
+    }
+  }
+  return result;
+}
+
+function isNumber(value) {
+  const re = /[0-9]/g;
+  return re.test(value);
+}
+
+
+```
