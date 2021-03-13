@@ -2,7 +2,7 @@
 
 链表常见的算法主要有，翻转链表，判断链表是否有环，查找链表的第 k 个数等。
 
-## 相交链表
+## 160.相交链表
 
 ### 方法一：添加标记法。
 
@@ -83,3 +83,52 @@ var getIntersectionNode = function(headA, headB) {
   return pA;
 };
 ```
+
+## 876.链表的中间结点
+
+像这种链表的第 k 个结点，都是使用快慢指针，快指针先走一段距离，或者快指针每步多走一段距离，这样的话，当快指针刚好到达终点的时候，慢指针正好指向我们要求的结点。
+链表的中间结点：
+
+1. 快指针每次比满指针多走以北的步数，当快指针到达链表尾部时，慢指针刚好到达中间点。
+
+```js
+var middleNode = function(head) {
+  let slow = head,
+    fast = head;
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+  return slow;
+};
+```
+
+## 寻找链表的倒数第 k 个结点
+
+同样是根据上面的分析，想要寻找倒数第 k 个结点，那么只需要让快指针先走 k 步，然后快慢指针按照相同的速度前进，
+当快指针到达链表尾部的时候，那么满指针所指向的就是第 k 个结点。
+
+```js
+var getKthFromEnd = function(head, k) {
+  let slow = head;
+  let fast = head;
+  let index = 1;
+  while (index <= k) {
+    fast = fast.next;
+    index += 1;
+  }
+  while (fast) {
+    fast = fast.next;
+    slow = slow.next;
+  }
+  return slow;
+};
+```
+
+## 链表中的第 k 个结点
+
+## 总结：
+
+1. 像求链表中第 k 个，倒数第 k 个，中间结点的题目，都是使用快慢指针，让快指针到达终点时，慢指针刚好在所求的指针的位置上。
+
+2. 像链表是否相交，链表是否有环啊，这种也都是通过快慢指针，但是需要确保他们走过相同的长度的链表。
