@@ -125,10 +125,99 @@ var getKthFromEnd = function(head, k) {
 };
 ```
 
+## 合并两个有序链表
+
+合并两个有序链表的思路和合并两个有序数组的思路是一样的，都是通过在两个链表的头部定义一个指针，
+然后每次比较以下，小的放到新链表的后面，因此，最关键的是我们需要定义个新的变量来标记新链表的尾部，
+而不能直接去操作新链表的头部，因为我们最终需要返回这个新链表的头。
+
+```js
+var mergeTwoLists = function(l1, l2) {
+  let newNode = new ListNode(-1);
+  let current = newNode;
+  while (l1 && l2) {
+    if (l1.val <= l2.val) {
+      current.next = l1;
+      l1 = l1.next;
+    } else if (l2.val < l1.val) {
+      current.next = l2;
+      l2 = l2.next;
+    }
+    current = current.next;
+  }
+  if (l1) {
+    current.next = l1;
+  }
+  if (l2) {
+    current.next = l2;
+  }
+  return newNode.next;
+};
+```
+
+## 从尾到头反过来打印链表
+
+像这种需要从尾到头打印链表的值得，我们如果按照正常顺序，打印出来的数组就是正常顺序，然后将结果翻转就行。
+当然我们可以直接在打印时，通过`unshift`进行打印。
+
+```js
+var reversePrint = function(head) {
+  let current = head;
+  let result = [];
+  while (current) {
+    result.unshift(current.val);
+    current = current.next;
+  }
+  return result;
+};
+```
+
 ## 链表中的第 k 个结点
+
+```js
+var getKthFromEnd = function(head, k) {
+  let slow = head;
+  let fast = head;
+  let index = 1;
+  while (index <= k) {
+    fast = fast.next;
+    index += 1;
+  }
+  while (fast) {
+    fast = fast.next;
+    slow = slow.next;
+  }
+  return slow;
+};
+```
+
+## 234 回文链表
+
+```js
+var isPalindrome = function(head) {
+  if (head === null || head.next === null) {
+    return true;
+  }
+  var prev = head;
+  var current = head; // 用于找到最后的节点
+  while (current.next) {
+    prev = current;
+    current = current.next;
+  }
+  if (current.val !== head.val) {
+    return false;
+  } else {
+    prev.next = null;
+    return isPalindrome(head.next);
+  }
+  return true;
+};
+```
 
 ## 总结：
 
 1. 像求链表中第 k 个，倒数第 k 个，中间结点的题目，都是使用快慢指针，让快指针到达终点时，慢指针刚好在所求的指针的位置上。
 
 2. 像链表是否相交，链表是否有环啊，这种也都是通过快慢指针，但是需要确保他们走过相同的长度的链表。
+
+3. 链表中绝大多数情况都可以通过 while 循环，但是还是有很多情况可以通过递归来实现的。如果我们需要从后往前拿到链表的数据，通常这种情况就需要通过递归来实现了。
