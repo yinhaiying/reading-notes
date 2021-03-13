@@ -33,9 +33,9 @@ function mergeSort(arr, start, end) {
     return;// 只剩一个元素，不需要再进行拆分了。
   }
   let mid = Math.ceil((start + end) / 2);
-  mergeSort(arr, start, mid);
-  mergeSort(arr, mid, end);
-  merge(arr, start, mid, end);
+  mergeSort(arr, start, mid);  // 合并左半部分成有序数组
+  mergeSort(arr, mid, end);    // 合并右半部分成有序数组
+  merge(arr, start, mid, end); //合并左右两个部分的数组
 }
 
 mergeSort(A, 0, A.length);
