@@ -48,13 +48,71 @@ function two_sum(arr,target){
 ```
 
 ### 应用三：不重复的子串
-
+![寻找不重复的子串](./imgs/寻找不重复的最长子串.png)
+寻找最长的子串，最好的方法就是不断地去查找某个区间之间的最长的子串，
+然后不断扩大这个区间范围，直到扩充到最后。因此，我们的实现思路如下：
+1. 定义两个变量start和end。start表示左区间，end表示右区间。
+2. 移动右指针，扩大区间范围，观察[start,end]之间是否有重复。如果没有重复，继续往后移动。
+3. 如果有重复。那么就记录当前[start,end]之间的长度，并与之前保留的最大长度进行比较，保留最大值。同时start移动到出现重复元素的第一个位置(只有重复元素之后的区间才可能不会再重复))。
+4. 注意start移动时，只能往后移动不能往前移动
+5. 注意最后返回的是区间之间的长度和当前记录的最大值之间的最大值。因为此时可能没有再出现重复，因此没有对最大值进行赋值。
 ```js
-初始化两个指针：
-    left=0;right=0;
-           right+=1 ;判断[left,right]有没有重复的，如果有记录下来当前的值str.substring(left,right)；
-    left+1；// left必须只能加1，而不是等于end。比如可能存在这种var s4 = "dvdfcab";d它和第一个d重复了，但是从第二个v开始，都是不重复的。因此我们不能直接调到第二个d上。也就是说，实际上我们要遍历字符串的每个元素，然后滑动right，找到对应窗口中的最值问题。
+var lengthOfLongestSubstring = function (s) {
+  let start = 0;
+  let end = 0;
+  let max = 0;
+  let obj = {};
+  while( end <= s.length-1){
+      if (!(s[end] in obj)) {
+          obj[s[end]] = end;
+          end += 1;
+      } else {
+          max = Math.max(max, end - start);
+          // start指针不能往后退，只能是当前一个和最新的中的最大值
+          start = Math.max(obj[s[end]] + 1,start);
+          obj[s[end]] = end;
+          end += 1;
+      }
+  }
+  return Math.max(max, end - start); // 返回最大值
+};
+```
 
+### 应用四——连续最长数字子序
+双指针问题的关键是其中一个动，达到某个条件之后，需要另外一个动，因此关键是什么情况下达到条件，已经另外一个指针如何动。
+```js
+function longestNumberSubstring(str){
+  let start = 0;
+  let end = 0;
+  let result = "";
+  while(end < str.length){
+    if (!isNumber(str[end])) {
+      result = (end - start) > result.length ? str.slice(start,end):result;
+      start = end + 1;
+      end += 1;
+    }else{
+        // 前一个不是number
+        if(!isNumber(str[end-1])){
+          start = end;
+          end +=1;
+        }else{
+           if(str[end] - str[end -1] == 1){
+               end+=1;
+           }else{
+               result = (end - start) > result.length ? str.slice(start, end) : result;
+               start = end;
+               end += 1;
+           }
+        }
+    }
+  }
+  return result;
+}
+
+function isNumber(value) {
+  const re = /[0-9]/g;
+  return re.test(value);
+}
 
 
 ```

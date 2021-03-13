@@ -24,26 +24,29 @@ abcbd:
 var lengthOfLongestSubstring = function (s) {
   let start = 0;
   let end = 0;
-  let result = "";
-  let item = "";
-  for (let i = 0; i < s.length; i++) {
-    let index = item.indexOf(s[i]);
-    if (index === -1) {
+  let max = 0;
+  let obj = {};
+  while (end <= s.length - 1) {
+    if (!(s[end] in obj)) {
+      obj[s[end]] = end;
       end += 1;
-      item = s.slice(start, end);
     } else {
-      result = item.length > result.length ? item : result;
-      start = index + 1;
-      item = s.slice(start, end);
+      max = Math.max(max, end - start);
+      // start指针不能往后退，只能是当前一个和最新的中的最大值
+      start = Math.max(obj[s[end]] + 1, start);
+      obj[s[end]] = end;
+      end += 1;
     }
   }
-  return result;
+  return Math.max(max, end - start);
 };
 var s1 = "abcabcbb";
 var s2 = "bbbbbb";
 var s3 = "pwwkew";
-var s4 = "dvdf"
-// console.log(lengthOfLongestSubstring(s1));
-// console.log(lengthOfLongestSubstring(s2));
-// console.log(lengthOfLongestSubstring(s3));
+var s4 = "dvdf";
+var s5 = "abba";
+console.log(lengthOfLongestSubstring(s1));
+console.log(lengthOfLongestSubstring(s2));
+console.log(lengthOfLongestSubstring(s3));
 console.log(lengthOfLongestSubstring(s4));
+console.log(lengthOfLongestSubstring(s5));
