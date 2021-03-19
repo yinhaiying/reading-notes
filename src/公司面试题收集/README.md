@@ -44,3 +44,92 @@
         return arr.join("");
     }
 ```
+
+#### 实现一个Symbol类型
+Symbol类型的初步实现
+1. 调用Symbol生成的值是唯一的。这种唯一性通过对象来实现。每个对象都是一个引用类型的值。
+```js
+let SymbolPolyfill = function Symbol(description){
+    if(new.target === Symbol){
+        throw new Error("can not be invoked by new");
+    }
+    let descString = description === undefined ? undefined :description.toString();
+    // 怎么保证它的唯一性了。实际上只需要保证每次创建的都是一个引用类型的值就可以了。
+    // 毕竟每个引用类型的值都会创建一个堆内存。
+    let symbol = Object.create(null);
+    Object.defineProperty(symbol, "__Description__", {
+            value:descString,
+            writable:false,
+            enumerable:false,
+            configurable:false
+    })
+    return symbol;
+}
+
+```
+2. 原生的Symbol 值可以显式转为字符串。
+```js
+Symbol("123").toString()  // 返回"Symbol(123)"
+```
+因此，我们的Symbol值也需要能够调用`toString`方法。因此，我们在原型上添加`toString()`，返回一个字符串;
+```js
+    let symbol = Object.create({
+        toString:function(){
+            return `Symbol(${this.__Description__})`
+        }
+    });
+```
+
+3. Symbol 值可以作为标识符，用于对象的属性名，可以保证不会出现同名的属性。
+这里我们的实现与这条特性冲突了，因为对象作为属性会调用它的`toString`方法。
+如下所示：
+```js
+let person = {"name":"海鹰"}
+let obj2 = {};
+obj2[person]= "你好"
+console.log(obj2)  // { [object Object] : "你好"}
+```
+但是我们当前的toString方法返回的是统一的`Symbol(${this.__Description__})`，每次都是相同的，而不是唯一的。也就是说，我们需要在toString方法中返回一个唯一的标识。
+实现唯一性，我们通常通过id来实现。每掉用一次id自增。
+```js
+    let generateName = (function(){
+        var postfix = 0;  // 通过id来实现唯一性
+        return function (descString) {
+            postfix++;
+            return '@@' + descString + '_' + postfix
+        }
+    })()
+```
+但是，这时候我们需要给自定义的Symbol增加Name属性了。对于多个属性的定义，不能使用`Object.defineProperty`，需要使用`Object.definedProperties`，
+```js
+let SymbolPolyfill = function Symbol(description){
+    if(new.target === Symbol){
+        throw new Error("can not be invoked by new");
+    }
+    let descString = description === undefined ? undefined :description.toString();
+    // 怎么保证它的唯一性了。实际上只需要保证每次创建的都是一个引用类型的值就可以了。
+    // 毕竟每个引用类型的值都会创建一个堆内存。
+    let symbol = Object.create({
+        toString:function(){
+            return `Symbol(${this.__Name__})`
+        }
+    });
+    let generateName = (function(){
+        var postfix = 0;  // 通过id来实现唯一性
+        return function (descString) {
+            postfix++;
+            return '@@' + descString + '_' + postfix
+        }
+    })()
+    Object.defineProperties(symbol, {
+         "__Description__":{
+            value: descString,
+         },
+         // 新增属性
+         "__Name__":{
+            value: generateName(descString),
+         },
+    })
+    return symbol;
+}
+```
