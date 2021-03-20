@@ -116,3 +116,73 @@ function isNumber(value) {
 
 
 ```
+
+### 应用五：最大子序列和
+>给定一个整数数组 nums， 找到一个具有最大和的连续子数组（ 子数组最少包含一个元素）， 返回其最大和。
+输入： nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+输出： 6
+解释： 连续子数组[4, -1, 2, 1] 的和最大， 为 6。
+
+#### 分析
+实际上就是遍历每个元素的区间，然后找到这个区间的最大值。查看暴力破解的方法。
+
+
+#### 暴力破解法
+```js
+var maxSubArray = function (nums) {
+    if (nums.length == 1) {
+        return nums[0]
+    }
+    let max = -Infinity;
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = i; j < nums.length; j++) {
+            let partitionArr = nums.slice(i, j + 1);
+            let sum = getSum(partitionArr);
+            console.log("sum:",sum)
+            max = Math.max(sum, max);
+        }
+    }
+    function getSum(arr) {
+        return arr.reduce((result, currentValue) => {
+            result += currentValue;
+            return result;
+        }, 0)
+    }
+    return max;
+};
+```
+但是，上面的代码我们可以发现，我们每次都切割了一个数组，然后调用`getSum`去计算它的和，但是实际上我们只需要记录最大值就行了，因此我们可以使用更加取巧的方法去进行计算。
+```js
+var maxSubArray = function(nums) {
+    let max = -Infinity;
+    let sum = 0;
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = i; j < nums.length; j++) {
+            sum += nums[j];
+            max = Math.max(sum, max);
+        }
+        sum=0;
+    }
+    return max;
+};
+```
+这样的化，就节省了数组切割，计算数组的和的过程，大大优化了效率。但是我们可以发现我们的时间复杂度是O(n^2)，在leetcode提交后只击败了5%的用户，说明代码不够优化。
+
+#### 动态规划法
+![](./imgs/53.最大子序和.png)
+如上图所示，我们可以发现，实际上我们只需要判断之前的子序列的和是否大于0，因为只有大于0，它加上当前的值才会更大，如果小于0，那么它的区间的和一定小于当前值，那么直接更新区间即可。
+```js
+var maxSubArray = function(nums) {
+    let sum = nums[0];
+    let max = nums[0];
+    for(let i = 1;i < nums.length;i++){
+        if(sum > 0){
+            sum += nums[i]
+        }else{
+            sum = nums[i];
+        };
+        max = Math.max(sum,max);
+    }
+    return max;
+};
+```
