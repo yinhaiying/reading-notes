@@ -214,6 +214,41 @@ var isPalindrome = function(head) {
 };
 ```
 
+
+## 148.排序链表
+对链表进行排序，最暴力的方法就是比较每个结点和它的下一个结点的值，类似于冒泡排序，每次都能够得到最大的一个值。但是
+我们需要首先知道链表的长度，只有知道长度我们才知道需要遍历多少遍。
+### 暴力破解法
+```js
+var sortList = function (head) {
+  if(head == null){return head};
+  let current = head;
+  let len = 0;
+  // 获取链表长度
+  while(current){
+    len +=1;
+    current = current.next;
+  }
+  for(let i = 0;i < len -1;i++){
+    current = head;
+    while(current.next) {
+        if (current.next.val < current.val){
+            // 交换值
+            let temp = current.val;
+            current.val = current.next.val;
+            current.next.val = temp;
+        }
+        current = current.next;
+    }
+  }
+  return head;
+};
+
+```
+
+
+
+
 ## 总结：
 
 1. 像求链表中第 k 个，倒数第 k 个，中间结点的题目，都是使用快慢指针，让快指针到达终点时，慢指针刚好在所求的指针的位置上。
