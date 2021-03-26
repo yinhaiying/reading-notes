@@ -214,40 +214,87 @@ var isPalindrome = function(head) {
 };
 ```
 
-
 ## 148.排序链表
+
 对链表进行排序，最暴力的方法就是比较每个结点和它的下一个结点的值，类似于冒泡排序，每次都能够得到最大的一个值。但是
 我们需要首先知道链表的长度，只有知道长度我们才知道需要遍历多少遍。
+
 ### 暴力破解法
+
 ```js
-var sortList = function (head) {
-  if(head == null){return head};
+var sortList = function(head) {
+  if (head == null) {
+    return head;
+  }
   let current = head;
   let len = 0;
   // 获取链表长度
-  while(current){
-    len +=1;
+  while (current) {
+    len += 1;
     current = current.next;
   }
-  for(let i = 0;i < len -1;i++){
+  for (let i = 0; i < len - 1; i++) {
     current = head;
-    while(current.next) {
-        if (current.next.val < current.val){
-            // 交换值
-            let temp = current.val;
-            current.val = current.next.val;
-            current.next.val = temp;
-        }
-        current = current.next;
+    while (current.next) {
+      if (current.next.val < current.val) {
+        // 交换值
+        let temp = current.val;
+        current.val = current.next.val;
+        current.next.val = temp;
+      }
+      current = current.next;
     }
   }
   return head;
 };
-
 ```
 
+## 02.02 环路检测(找环的入口)
 
+我们平常找链表中是否有环，一般使用快慢指针，让慢指针走一步，快指针走两步，如果有环，那么一定会在某个结点上相遇。实现思路如下：
 
+```js
+if (head === null || head.next === null) {
+  return null;
+}
+let slow = head;
+let fast = head;
+while (fast && fast.next) {
+  slow = slow.next;
+  fast = fast.next.next;
+  if (slow === fast) {
+    retun true
+  }
+}
+```
+
+但是，这种方法只能判断是否有环，因为我们最终相遇的结点是在还的某一个结点上，但是不一定在环的入口住。因此我们还需要通过一些计算得到环的入口。计算规则就是：从头结点到环的入口的距离，和快慢指针相遇的结点到环的入口走过的距离是相等的（这个记下来）。
+因此，我们还需要将一个指针放到头结点，重新跑一遍。
+
+```js
+var detectCycle = function(head) {
+  if (head === null || head.next === null) {
+    return null;
+  }
+  let slow = head;
+  let fast = head;
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) {
+      break;
+    }
+  }
+  // 为了找到环的入口,需要再次进行运动，运动的规则是从头结点到环的入口和从相交界节点到环的的入口举例相等。
+  if (!fast || !fast.next) return null;
+  fast = head;
+  while (fast && fast !== slow) {
+    fast = fast.next;
+    slow = slow.next;
+  }
+  return slow;
+};
+```
 
 ## 总结：
 

@@ -21,9 +21,6 @@ class Queue {
       return this.stack2.pop();
     }
   }
-
-
-
 }
 
 const queue = new Queue();
