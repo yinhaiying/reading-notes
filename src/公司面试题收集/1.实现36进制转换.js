@@ -34,4 +34,4 @@
         }
         return arr.join("");
     }
-    console.log(scale36(72));
+    console.log(scale36(68));
