@@ -3,21 +3,17 @@
 
 
 */
-
-var nums = [1, 3, 2, 7, 9, 5];
-var target = 11;
-var twoSum = function (nums, target) {
-  let p1 = 0;
-  let p2;
-  while (p1 < nums.length) {
-    p2 = p1 + 1;
-    while (p2 < nums.length) {
-      if (target - nums[p1] === nums[p2]) {
-        return [p1, p2];
-      }
-      p2++;
+let nums = [2,3,4, 7, 11, 15], target = 9;
+let twoSum = function (nums, target) {
+  let obj = {};
+  let len = nums.length;
+  for (let i = 0; i < len; i++) {
+    let item = target - nums[i];
+    if (nums[i] in obj && i !== obj[nums[i]]) {
+      return [i, obj[nums[i]]];
+    } else {
+      obj[item] = i;
     }
-    p1++;
   }
 };
 

@@ -28,3 +28,27 @@ var uniquePaths = function (m, n) {
 };
 
 uniquePaths(2,2)
+
+var uniquePaths = function (m, n) {
+    // 确定状态方程 f(m,n) = f(m-1,n) + f(m,n-1)
+
+    // 状态容器
+    let dp = new Array(m);
+    for (let i = 0; i < m; i++) {
+        dp[i] = new Array(n);
+    }
+    // 初始化数据
+    // m = 0的时候  都只有一种方式
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (i === 0) {
+                dp[0][j] = 1;
+            } else if (j === 0) {
+                dp[i][0] = 1;
+            } else {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+    }
+    return dp[m - 1][n - 1]
+};
