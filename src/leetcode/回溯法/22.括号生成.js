@@ -47,3 +47,47 @@ var generateParenthesis = function (n) {
   }
   return dfs(n, n, arr, path, result)
 };
+
+
+var generateParenthesis = function (n) {
+  var arr = ["("];
+  var path = [];
+  var result = [];
+  var leftCount = 0; // 用于记录(的个数
+  var rightCount = 0;
+
+  var backTrack = function (arr, path) {
+    for (var i = 0; i < arr.length; i++) {
+      if (path.length === 2 * n) {
+        result.push([...path].join(""));
+        return;
+      }
+      // 作出选择
+      path.push(arr[i]);
+      if (arr[i] === "(") {
+        leftCount += 1;
+      } else {
+        rightCount += 1;
+      }
+
+      // 进行下一层遍历
+      var newArr;
+      if (leftCount === n) {
+        newArr = [")"];
+      } else if (leftCount === rightCount) {
+        newArr = ["("]
+      } else {
+        newArr = ["(", ")"]
+      }
+      backTrack(newArr, path, result);
+
+      if (path.pop() === "(") {
+        leftCount -= 1;
+      } else {
+        rightCount -= 1;
+      }
+    }
+    return result;
+  }
+  return backTrack(arr, path, result)
+};

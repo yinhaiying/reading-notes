@@ -39,3 +39,33 @@ var permute = function (nums) {
   }
   return dfs(n, k, nums, path, result);
 };
+
+
+
+var permute = function (nums) {
+  let path = []; // 路径保存数组
+  let result = []; // 结果数组
+  backtrack(nums, path)
+
+  function backtrack(nums, path) {
+    // 递归终止条件
+    if (path.length === nums.length) {
+      result.push([...path]);
+    }
+    for (let i = 0; i < nums.length; i++) {
+      // 由于不能重复，因此需要剪枝
+      if (path.includes(nums[i])) {
+        continue;
+      }
+      // 做选择
+      path.push(nums[i]);
+      // 进入下一层决策树
+      backtrack(nums, path);
+      // 撤销选择
+      path.pop();
+    }
+  }
+  return result;
+};
+
+
