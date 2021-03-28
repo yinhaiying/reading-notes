@@ -216,6 +216,84 @@ function shuffle(arr){
 }
 ```
 
+## 一组数据判断能够形成三角形的数据
+
+### 分析
+能够形成三角形的条件是任意两边之和大于第三边。因此，我们肯定是需要拿到这三条边进行计算的。
+
+### 暴力破解法
+```js
+var triangleNumber = function (nums) {
+  let count = 0;
+  for(let i = 0;i < nums.length;i++){
+      for(let j = i+1;j < nums.length;j++){
+          for(let k = j+1;k < nums.length;k++){
+              if((nums[i] + nums[j] > nums[k]) && (nums[i] + nums[k] > nums[j]) && (nums[k] + nums[j] > nums[i])){
+                  count+=1;
+              }
+          }
+      }
+  }
+  return count;
+};
+```
+很明显，我们的暴力破解法时间复杂度比较高，是O(n^3)，我们肯定需要进行一些优化。而降低时间复杂度的方法主要有：
+* 空间换时间
+* 排序换时间(由于我们一般是基于比较的排序算法，时间复杂度最低为O(nlogn))，因此，排序算法通常是用于时间复杂度大于O(nlogn)的情况下，
+比如O(n^2)或者O(n^3)。
+这里由于我们很难去使用来进行换时间，而时间复杂度又是O(n^3)，因此，可能更大可能是使用排序换时间。而且，我们发现我们的最核心的操作就是
+两个值相加进行大小比较，这种需要比较的，通常使用排序可以进行一定程度的优化。因此，在这里我们很可能就是使用排序算法来进行优化，通过排序，我们可以发现很多操作是不必要的。示例：
+```js
+排序前：[0,4,3,2]
+排序后：[0,2,3,4]
+```
+我们可以发现：
+由于c > b，因此a + c一定大于b;
+由于b>a;c>a；因此 b + c一定大于a；
+也就是说我们其实只需要判断 a + b > c即可了。
+
+### 优化一：排序后减枝
+```js
+var triangleNumber = function(nums) {
+    let count = 0;
+    nums.sort((a,b) => a-b);  // 
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = i + 1; j < nums.length; j++) {
+            for (let k = j + 1; k < nums.length; k++) {
+                if ((nums[i] + nums[j] > nums[k])) {
+                    count += 1;
+                }
+            }
+        }
+    }
+    return count;
+};
+```
+通过上面的排序后，我们虽然减少了一些操作，但是时间复杂度实际上还是O(n^3)，只是减少了一些枝叶罢了。
+那么我们可以进一步优化，把最里层的这层循环去掉了？我们可以发现我们实际上要实现的就是`nums[i] + nums[j] > nums[k]`，我们可以
+发现如果当前`nums[i] + nums[j] < nums[k]`，那么说明后面的所有的其他k都不需要遍历了，这时候修改j即可。也就是说我们其实可以给出两个
+指针来定义j和k，根据是否满足`nums[i] + nums[j] < nums[k]`来修改j和k的值。这样的话，最终实现的其实是一次遍历。时间复杂度变为O(n^2)了。
+```js
+var triangleNumber = function (nums) {
+    let count = 0;
+    let len = nums.length;
+    nums.sort((a, b) => a - b); // 
+    for (let i = 0; i < len; i++) {
+        let j = i + 1;
+        let k = i + 2;
+        while (nums[i] > 0 && j < len && k <= len) {
+            // 当k等于len时，其实是需要改变j了。
+            if (k < len && nums[i] + nums[j] > nums[k]) {
+                k++;
+            } else {
+                count += k - j - 1;
+                j++;
+            }
+        }
+    }
+    return count;
+};
+```
 
 
 

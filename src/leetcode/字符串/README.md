@@ -204,6 +204,34 @@ var repeatedSubstringPattern = function(s) {
 ```
 
 
+## 680.验证回文字符串
+注意：回文字符串有两种做法，一种是使用中心法，这种通常适合于比较复杂的情况，比如需要去获取最长回文字符串等，另外一种就是只是简单的判断在某个范围是否是回文字符串。
+如下所示，只是需要判断删除一个字符后还是不是回文字符串，因此我们只需要判断在某个范围内是否是回文字符串。
+```js
+var validPalindrome = function (s) {
+    // 判断[l,r]是否是回文
+    function isPalidrome(s, l, r) {
+        while (l < r) {
+            if (s[l] !== s[r]) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+    let left = 0;
+    let right = s.length - 1;
+    while (left < right) {
+        if (s[left] !== s[right]) {
+            return isPalidrome(s, left + 1, right) || isPalidrome(s, left, right - 1);
+        }
+        left++;
+        right--;
+    }
+    return true;
+};
+```
 
 
 
