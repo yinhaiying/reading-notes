@@ -10,10 +10,27 @@
   
   
   function isPrimse(n) {
-      for (let i = 2; i < n; i++) {
+
+      for (let i = 2; i <n; i++) {
           if (n % i === 0) {
               return false
           }
       }
       return true;
   }
+
+
+  var countPrimes = function (n) {
+      let arr = new Array(n).fill(true);
+      let count = 0;
+      for (let i = 2; i < n; i++) {
+          if (arr[i]) {
+              count += 1;
+              // 为什么从i*i开始，因为在之前i*(i-1)，已经被(i-1)*i遍历过了。
+              for (let j = i * i; j < n; j += i) {
+                  arr[j] = false;
+              }
+          }
+      }
+      return count;
+  };
