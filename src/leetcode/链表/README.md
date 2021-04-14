@@ -296,6 +296,27 @@ var detectCycle = function(head) {
 };
 ```
 
+## 两两交换链表中的结点
+
+1. 由于交换链表中的结点会导致`head`结点发生变化，因此需要设置一个`dummy`卫兵结点记录新的头结点。
+2. 每次交换的过程实际上都是一样的，因此只需要使用递归将结点的 next 指向返回的结点即可。
+
+```js
+var swapPairs = function(head) {
+  if (head === null || head.next === null) {
+    return head;
+  }
+  let slow = head;
+  let fast = head.next;
+  let dummy = new ListNode();
+  dummy.next = fast; // 用来记录新的头结点
+  slow.next = fast.next;
+  fast.next = slow;
+  slow.next = swapPairs(slow.next); //  让已经交换的结点指向下一个返回的头结点即可。
+  return dummy.next; // 每次返回的是头结点
+};
+```
+
 ## 总结：
 
 1. 像求链表中第 k 个，倒数第 k 个，中间结点的题目，都是使用快慢指针，让快指针到达终点时，慢指针刚好在所求的指针的位置上。
